@@ -29,7 +29,7 @@ public:
 	double volume = 0;
 	double linear_size = 0; // the cell has a square shape, so it can be characterized by one parameter
 
-	Material* material; // cell material, in the future it will be an array of several materials with an indication of their contents
+	Material* material; // cell material, in the future it will be an array of several materials with an indication of their contents and average grain size, or its distribution
 
 	void swap() // after the end of the cycle, the values for which the values of the previous step are needed for calculation are swapped
 	{

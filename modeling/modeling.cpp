@@ -86,6 +86,7 @@ int main()
 	//--------------------------------------------------------
 
 	Calculation_of_heat_distribution heat_distribution(num_x, num_y);
+	double max_del_t = 0;
 	double time_step = 0.001;
 	double time = 0;
 	while (true)
@@ -101,7 +102,7 @@ int main()
 
 			double sum_t = 0;
 
-			double max_del_t = 0;
+			max_del_t = 0;
 
 			for (int i = 0; i < num_y; i++) // minmax search
 			{
@@ -119,7 +120,7 @@ int main()
 
 			Print_line("Min temp.: " + std::to_string(min_t) + " Max temp.: " + std::to_string(max_t) + " Median temp.: " + std::to_string(median), 2);
 
-			Print_line("Time step: " + std::to_string(time_step), 5);
+			Print_line("Time step: " + std::to_string(time_step) + ";/t/tMax teprture oer step: " + std::to_string(max_del_t), 5);
 
 			time_step = 0.01 / max_del_t;
 

@@ -77,7 +77,7 @@ double Static_temprture_wall (Cell** arr_of_cell, int i, int j, double temprture
 	return termal_flow / (arr_of_cell[i][j].heat_capacity * arr_of_cell[i][j].density * arr_of_cell[i][j].volume);
 }
 
-void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double delta_time, bool is_draw_wind)
+void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double delta_time, bool is_draw_wind) //a custom option for heat distribution
 {
 	for (int i = 0; i < height; i++) 
 	{
@@ -184,21 +184,50 @@ void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double d
 	if (is_draw_wind) Draw_wind(arr_of_cells);
 }
 
-//void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double delta_time, bool is_draw_wind)
+//void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double delta_time, bool is_draw_wind) //differential variant of heat distribution
 //{
 //	for (int i = 0; i < height; i++) // minmax search
 //	{
 //		for (int j = 0; j < width; j++)
-//		{
-//			double trmprture_conductivity_x = (1 / (1 / ((j > 0) ? arr_of_cells[i][j - 1].thermal_conductivity : arr_of_cells[i][j].thermal_conductivity) + 1 / arr_of_cells[i][j].thermal_conductivity) + 1 / ((j < width - 1) ? arr_of_cells[i][j + 1].thermal_conductivity : arr_of_cells[i][j].thermal_conductivity)) / (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density);
-//			
+//		{	
+//			double thermal_condactivity_x = 0;
+//
+//			if (j == 0)
+//			{
+//				thermal_condactivity_x = 3 / (1 / arr_of_cells[i][j].thermal_conductivity + 2 / arr_of_cells[i][j + 1].thermal_conductivity);
+//			}
+//			else if (j == width - 1)
+//			{
+//				thermal_condactivity_x = 3 / (1 / arr_of_cells[i][j - 1].thermal_conductivity + 2 / arr_of_cells[i][j].thermal_conductivity);
+//			}
+//			else
+//			{
+//				thermal_condactivity_x = 4 / (1 / arr_of_cells[i][j - 1].thermal_conductivity + 2 / arr_of_cells[i][j].thermal_conductivity + 1 / arr_of_cells[i][j + 1].thermal_conductivity);
+//			}
+//
+//			double temprture_conductivity_x = thermal_condactivity_x / (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density);
+//
 //			double grad_x = (((j > 0) ? arr_of_cells[i][j - 1].old_temperature : arr_of_cells[i][j].old_temperature)  // left
 //				- 2 * arr_of_cells[i][j].old_temperature
 //				+ ((j < width - 1) ? arr_of_cells[i][j + 1].old_temperature : arr_of_cells[i][j].old_temperature)) // right
 //				/ pow(arr_of_cells[i][j].linear_size, 2);
 //
+//			double thermal_condactivity_y = 0;
 //
-//			double trmprture_conductivity_y = (1 / (((i > 0) ? 1 / arr_of_cells[i - 1][j].thermal_conductivity : 0) +  1 / arr_of_cells[i][j].thermal_conductivity) + ((i < height - 1) ? 1 / arr_of_cells[i + 1][j].thermal_conductivity : 0)) / (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density);
+//			if (i == 0)
+//			{
+//				thermal_condactivity_y = 3 / (1 / arr_of_cells[i][j].thermal_conductivity + 2 / arr_of_cells[i + 1][j].thermal_conductivity);
+//			}
+//			else if (i == height - 1)
+//			{
+//				thermal_condactivity_y = 3 / (1 / arr_of_cells[i - 1][j].thermal_conductivity + 2 / arr_of_cells[i][j].thermal_conductivity);
+//			}
+//			else
+//			{
+//				thermal_condactivity_y = 4 / (1 / arr_of_cells[i - 1][j].thermal_conductivity + 2 / arr_of_cells[i][j].thermal_conductivity + 1 / arr_of_cells[i + 1][j].thermal_conductivity);
+//			}
+//
+//			double temprture_conductivity_y = thermal_condactivity_y / (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density);
 //
 //			double grad_y = (((i > 0) ? arr_of_cells[i - 1][j].old_temperature : 1000) //top
 //				- 2 * arr_of_cells[i][j].old_temperature
@@ -207,12 +236,12 @@ void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double d
 //
 //			double internal_heat_release = pow(arr_of_cells[i][j].currents, 2) * arr_of_cells[i][j].resistances / arr_of_cells[i][j].linear_size;
 //
-//			if (i == height / 2 && j == width / 2) internal_heat_release = 1000;
+//			//if (i == height / 2 && j == width / 2) internal_heat_release = 1000;
 //
 //			internal_heat_release /= (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density * arr_of_cells[i][j].volume);
 //
-//			arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature  + (trmprture_conductivity * (grad_x + grad_y) + internal_heat_release)* delta_time;
-//			arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature + (trmprture_conductivity_x * grad_x + trmprture_conductivity_y * grad_y) * delta_time;
+//			//arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature  + (trmprture_conductivity * (grad_x + grad_y) + internal_heat_release)* delta_time;
+//			arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature + (temprture_conductivity_x * grad_x + temprture_conductivity_y * grad_y) * delta_time;
 //
 //
 //		}
@@ -221,91 +250,6 @@ void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double d
 //	if (is_draw_wind) Draw_wind(arr_of_cells);
 //}
 
-//void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double delta_time, bool is_draw_wind)
-//{
-//	for (int i = 0; i < height; i++) // minmax search
-//	{
-//		for (int j = 0; j < width; j++)
-//		{
-//			double trmprture_conductivity = arr_of_cells[i][j].thermal_conductivity / (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density);
-//			//if (arr_of_cells[i][j].material == &Porosity) trmprture_conductivity = 0;
-//			double grad_x = (((j > 0) ? arr_of_cells[i][j - 1].old_temperature : arr_of_cells[i][j].old_temperature)  // left
-//							- 2 * arr_of_cells[i][j].old_temperature
-//							+ ((j < width - 1) ? arr_of_cells[i][j + 1].old_temperature : arr_of_cells[i][j].old_temperature)) // right
-//							/ pow(arr_of_cells[i][j].linear_size, 2);
-//
-//			double grad_y = (((i > 0) ? arr_of_cells[i - 1][j].old_temperature : 1000) //top
-//							- 2 * arr_of_cells[i][j].old_temperature 
-//							+ (( i < height - 1) ? arr_of_cells[i + 1][j].old_temperature : 0)) // botom
-//							/ pow(arr_of_cells[i][j].linear_size, 2);
-//
-//			double internal_heat_release = pow(arr_of_cells[i][j].currents, 2) * arr_of_cells[i][j].resistances / arr_of_cells[i][j].linear_size;
-//
-//			//if (i == height / 2 && j == width / 2) internal_heat_release = 1000;
-//
-//			internal_heat_release /= (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density * arr_of_cells[i][j].volume);
-//
-//			if (arr_of_cells[i][j].material == &Porosity)
-//			{ 
-//				//Sleep(100);
-//			}
-//
-//			//arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature  + (trmprture_conductivity * (grad_x + grad_y) + internal_heat_release)* delta_time;
-//			arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature + (trmprture_conductivity * (grad_x + grad_y)) * delta_time;
-//
-//
-//
-//			//double heat_flow_from_left = 0;
-//			//if(j > 0) 
-//			//	heat_flow_from_left = (arr_of_cells[i][j - 1].old_temperature - arr_of_cells[i][j].old_temperature) /
-//			//	(1 / arr_of_cells[i][j - 1].thermal_conductivity + 1 / arr_of_cells[i][j].thermal_conductivity);
-//			//else 
-//			//	heat_flow_from_left = (arr_of_cells[i][j].old_temperature - arr_of_cells[i][j].old_temperature ) /
-//			//	(1 / arr_of_cells[i][j].thermal_conductivity);
-//
-//			//double heat_flow_from_right = 0;
-//			//if(j < width - 1)
-//			//	heat_flow_from_right = (arr_of_cells[i][j + 1].old_temperature - arr_of_cells[i][j].old_temperature) /
-//			//	(1 / arr_of_cells[i][j + 1].thermal_conductivity + 1 / arr_of_cells[i][j].thermal_conductivity);
-//			//else
-//			//	heat_flow_from_right = (arr_of_cells[i][j].old_temperature - arr_of_cells[i][j].old_temperature) /
-//			//	(1 / arr_of_cells[i][j].thermal_conductivity);
-//
-//			//double heat_flow_from_up = 0;
-//			//if (i > 0)
-//			//	heat_flow_from_up = (arr_of_cells[i - 1][j].old_temperature - arr_of_cells[i][j].old_temperature) /
-//			//	(1 / arr_of_cells[i - 1][j].thermal_conductivity + 1 / arr_of_cells[i][j].thermal_conductivity); 
-//			//else
-//			//	heat_flow_from_up = (1000 - arr_of_cells[i][j].old_temperature) /
-//			//	(1 / arr_of_cells[i][j].thermal_conductivity);
-//
-//			//double heat_flow_from_down = 0;
-//			//if(i < height - 1) heat_flow_from_down = (arr_of_cells[i + 1][j].old_temperature - arr_of_cells[i][j].old_temperature) /
-//			//	(1 / arr_of_cells[i + 1][j].thermal_conductivity + 1 / arr_of_cells[i][j].thermal_conductivity);
-//			//else
-//			//	heat_flow_from_down = (0 - arr_of_cells[i][j].old_temperature) /
-//			//	(1 / arr_of_cells[i][j].thermal_conductivity);
-//
-//			//double sun_of_heat_flow = heat_flow_from_up + heat_flow_from_down + heat_flow_from_left + heat_flow_from_right;
-//
-//			//double temperature_flow = sun_of_heat_flow * pow(arr_of_cells[i][j].linear_size, 2) *  2 / (arr_of_cells[i][j].linear_size * arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density * arr_of_cells[i][j].volume);
-//
-//			//double internal_heat_release = 0;
-//			//	
-//			////if (i == height / 2 && j == width / 2)
-//			//{
-//			//	internal_heat_release = pow(arr_of_cells[i][j].currents, 2) * arr_of_cells[i][j].resistances / arr_of_cells[i][j].linear_size;
-//
-//			//	internal_heat_release /= (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density * arr_of_cells[i][j].volume);
-//			//}
-//
-//			//arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature + (sun_of_heat_flow) * delta_time;
-//
-//		}
-//	}
-//
-//	if (is_draw_wind) Draw_wind(arr_of_cells);
-//}
 
 void Calculation_of_heat_distribution::Draw_wind(Cell** arr_of_cells)
 {
