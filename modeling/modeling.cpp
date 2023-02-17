@@ -86,13 +86,44 @@ int main()
 	//--------------------------------------------------------
 
 	Calculation_of_heat_distribution heat_distribution(num_x, num_y);
+	double time_step = 0.001;
 	double time = 0;
 	while (true)
 	{
-		time += 0.01;
-		heat_distribution.Culculation(all_cell, 0.01);
+		time += time_step;
+		heat_distribution.Culculation(all_cell, time_step);
 
 		Print_line(std::to_string(int(time / 3600)) + ':' + std::to_string(int(time) % 3600 / 60) + ':' + std::to_string(int(time) % 3600 % 60), 0);
+
+		{
+			double min_t = all_cell[0][0].new_temperature;
+			double max_t = -all_cell[0][0].new_temperature;
+
+			double sum_t = 0;
+
+			double max_del_t = 0;
+
+			for (int i = 0; i < num_y; i++) // minmax search
+			{
+				for (int j = 0; j < num_x; j++)
+				{
+					if (all_cell[i][j].new_temperature > max_t) max_t = all_cell[i][j].new_temperature;
+					if (all_cell[i][j].new_temperature < min_t) min_t = all_cell[i][j].new_temperature;
+					sum_t += all_cell[i][j].new_temperature;
+
+					if (abs(all_cell[i][j].new_temperature - all_cell[i][j].old_temperature) > max_del_t) max_del_t = abs(all_cell[i][j].new_temperature - all_cell[i][j].old_temperature);
+				}
+			}
+
+			double median = sum_t / (num_x * num_y);
+
+			Print_line("Min temp.: " + std::to_string(min_t) + " Max temp.: " + std::to_string(max_t) + " Median temp.: " + std::to_string(median), 2);
+
+			Print_line("Time step: " + std::to_string(time_step), 5);
+
+			time_step = 0.01 / max_del_t;
+
+		}
 
 		for (int i = 0; i < num_y; i++)
 		{
@@ -102,31 +133,10 @@ int main()
 			}
 		}
 
-
-		{
-			double min_t = all_cell[0][0].new_temperature;
-			double max_t = -all_cell[0][0].new_temperature;
-
-			double sum_t = 0;
-
-			for (int i = 0; i < num_y; i++) // minmax search
-			{
-				for (int j = 0; j < num_x; j++)
-				{
-					if (all_cell[i][j].new_temperature > max_t) max_t = all_cell[i][j].new_temperature;
-					if (all_cell[i][j].new_temperature < min_t) min_t = all_cell[i][j].new_temperature;
-					sum_t += all_cell[i][j].new_temperature;
-				}
-			}
-
-			Print_line("Min temp.: " + std::to_string(min_t) + " Max temp.: " + std::to_string(max_t) + " Median temp.: " + std::to_string(sum_t / (num_x * num_y)), 2);
-
-		}
-
-		if (time > 3.)
-		{
-			std::cin.get();
-		}
+		//if (time > 60. * 4)
+		//{
+		//	std::cin.get();
+		//}
 
 
 		//Sleep(1000);

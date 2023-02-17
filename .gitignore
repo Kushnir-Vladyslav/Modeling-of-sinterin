@@ -32,7 +32,7 @@
 *.app
 
 
-*.vcxproj*
+
 
 old_file/
 x64/

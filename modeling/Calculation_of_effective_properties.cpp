@@ -20,8 +20,9 @@ void Calculation_of_effective_properties::Array_initialization(Cell** arr_of_cel
 
 			// set materials
 
-			//arr_of_cells[i][j].material = (rand() % 100 < 5) ? &Porosity : &Titanium;
+			//arr_of_cells[i][j].material = (rand() % 100 < 3) ? &Porosity : &Titanium;
 			arr_of_cells[i][j].material = &Titanium;
+			if (i == height / 2 && j == width / 2) arr_of_cells[i][j].material = &Porosity;
 		}
 	}
 }

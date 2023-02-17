@@ -27,7 +27,7 @@ public:
 static Material Porosity([](double temperature) {return double (INT32_MAX / 3); },
 				[](double temperature) {return 1.; },
 				[](double temperature) {return  double(INT32_MAX / 3); },
-				[](double temperature) {return 0.; },
+				[](double temperature) {return 0.001; },
 				ST_GAS);
 
 static Material Titanium([](double temperature) {return 0.66995 * 1e-6 * 1e-2; },
