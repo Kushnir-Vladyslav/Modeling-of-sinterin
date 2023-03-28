@@ -2,28 +2,25 @@
 
 #include "Wind_wrap.h"
 #include "Cell.h"
+#include "data.h"
 
 class Calculation_of_currents_Gauss
 {
 public:
-	Calculation_of_currents_Gauss(int width, int height);
+	Calculation_of_currents_Gauss(bool draw_window = false);
 
-	void Culculation(Cell** arr_of_cells, double voltage, bool is_draw_wind = true);
-	void Draw_wind(Cell** arr_of_cells);
+	void Culculation(Cell** sample,  bool is_draw_wind = true);
+	void Draw_wind(Cell** sample);
 
 	~Calculation_of_currents_Gauss();
 private:
-	Wind_wrap Wind;
+	Wind_wrap* Wind;
 	void* BitmapMemory;
-
-	double dielectric = INT32_MAX / 3;
 
 	int num_equations;
 	double** equations;
 
 	double* voltage;
-
-	int width;
-	int height;
+	double* currents;
 };
 

@@ -1,10 +1,7 @@
 #pragma once
 #include <algorithm> 
 #include "Materials.h"
-
-//+++++++++++++++++++++++++++++++
-#include <random>
-//-------------------------------
+#include "data.h"
 
 class Cell
 {
@@ -22,8 +19,8 @@ public:
 	double porosity = 0; // pore content in the cell % (0 - 100), sum of all gases
 
 	// block of variables that are enumerated at each step and depend on previous values
-	double new_temperature = 273.; // the cell temperature is calculated in the last step
-	double old_temperature = 273.; // cell temperature, which will be calculated in the next step
+	double new_temperature = initial_temperature; // the cell temperature is calculated in the last step
+	double old_temperature = initial_temperature; // cell temperature, which will be calculated in the next step
 
 	// geometric parameters, are constant values and do not change over time
 	double volume = 0.;

@@ -4,30 +4,19 @@
 #include "Cell.h"
 //-------------------------
 
-#include "Culculation_of_currents.h"
+#include "Calculation_of_currents_Gauss.h"
+#include "Calculation_of_currents_SOR.h"
 #include "Calculation_of_effective_properties.h"
 #include "Calculation_of_heat_distribution.h"
 
-#include "Fast_culculation_of_currents.h"
+#include "data.h"
+
 
 //++++++++++++++++++++++++++++++++++++++
 #include "Timer.h"
 
 #include "Print_line.h"
 //--------------------------------------
-
-const double size_x = 20*1e-2; // in meters // dimensions of the sample, or pressing together with the matrix
-const double size_y = 20*1e-2; // in meters
-
-
-const int num_x = 100;
-
-const double linear_cell_size = size_x / num_x; // the cell has a square shape, so it can be characterized by one parameter
-
-const int num_y = size_y / linear_cell_size;
-
-
-double U = 1. / num_x;
 
 
 
@@ -37,31 +26,46 @@ int main()
 
 	srand(time(NULL));
 
-	Cell** all_cell = new Cell * [num_y]; // create arr of cells
-	for (int i = 0; i < num_y; i++)
+	Cell** all_cell = new Cell * [height_sample]; // create arr of cells
+	for (int i = 0; i < height_sample; i++)
 	{
-		all_cell[i] = new Cell[num_x];
+		all_cell[i] = new Cell[width_sample];
 	}
 
-
-
-	Calculation_of_effective_properties Resistances (num_x, num_y);
+	Calculation_of_effective_properties Resistances (false);
 	
-	Resistances.Array_initialization(all_cell, num_x, num_y, linear_cell_size);
+	Resistances.Array_initialization(all_cell);
 
 	Resistances.Calculation_all_of_effective_properties(all_cell);
 
-	//Resistances.Test_filling_resistances(all_cell);
+	Resistances.Test_filling_resistances(all_cell, true);
 
-	
-	Culculation_of_currents Current(num_x, num_y);
+	Calculation_of_currents_SOR Current (true);
+	Timer tt;
+	while (true)
+	{
+		Current.Culculation(all_cell, true);
+		std::cout << "time:\t" << tt.Dt() << std::endl;
 
+		for (int i = 0; i < height_sample; i++) // generation of cell resistances (with neck)
+		{
+			for (int j = 0; j < width_sample; j++)
+			{
+				all_cell[i][j].resistances += all_cell[i][j].resistances * (rand() % 10 / 1000.) * ((rand() % 2 == 0) ? -1 : 1);
+			}
+		}
+	}
 
+	std::cin.get();
+	//for (int i = 0; i < height_sample; i++) // generation of cell resistances (with neck)
+	//{
+	//	for (int j = 0; j < width_sample; j++)
+	//	{
+	//		all_cell[i][j].resistances += all_cell[i][j].resistances * (1. + rand() % 10 / 10.) * (rand() % 100 == 0) ? -1 : 1;
+	//	}
+	//}
 
-	 
-	//Fast_culculation_of_currents Current(num_x, num_y);
-
-	//Current.Culculation(all_cell, U, false);
+	//Current.Culculation(all_cell, U, true);
 
 	//++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	{
@@ -70,9 +74,9 @@ int main()
 
 		double sum_c = 0;
 
-		for (int i = 0; i < num_y; i++) // minmax search
+		for (int i = 0; i < height_sample; i++) // minmax search
 		{
-			for (int j = 0; j < num_x; j++)
+			for (int j = 0; j < width_sample; j++)
 			{
 				if (all_cell[i][j].currents > max_c) max_c = all_cell[i][j].currents;
 				if (all_cell[i][j].currents < min_c) min_c = all_cell[i][j].currents;
@@ -80,14 +84,15 @@ int main()
 			}
 		}
 
-		Print_line("Min cur.: " + std::to_string(min_c) + " Max cur.: " + std::to_string(max_c) + " Median cur.: " + std::to_string(sum_c / (num_x * num_y)), 1);
+		Print_line("Min cur.: " + std::to_string(min_c) + " Max cur.: " + std::to_string(max_c) + " Median cur.: " + std::to_string(sum_c / (width_sample * height_sample)), 1);
 
 	}
 	//--------------------------------------------------------
-
-	Calculation_of_heat_distribution heat_distribution(num_x, num_y);
+	bool t5 = true;
+	
+	Calculation_of_heat_distribution heat_distribution (true);
 	double max_del_t = 0;
-	double time_step = 0.001;
+	double time_step = 0.0001;
 	double time = 0;
 	while (true)
 	{
@@ -104,41 +109,44 @@ int main()
 
 			max_del_t = 0;
 
-			for (int i = 0; i < num_y; i++) // minmax search
+			for (int i = 0; i < height_sample; i++) // minmax search
 			{
-				for (int j = 0; j < num_x; j++)
+				for (int j = 0; j < width_sample; j++)
 				{
 					if (all_cell[i][j].new_temperature > max_t) max_t = all_cell[i][j].new_temperature;
 					if (all_cell[i][j].new_temperature < min_t) min_t = all_cell[i][j].new_temperature;
 					sum_t += all_cell[i][j].new_temperature;
-
+					if (i > 0 && i < height_sample - 1 && j > 0 && j < width_sample - 1)
 					if (abs(all_cell[i][j].new_temperature - all_cell[i][j].old_temperature) > max_del_t) max_del_t = abs(all_cell[i][j].new_temperature - all_cell[i][j].old_temperature);
+					if (max_del_t == 0) max_del_t = 0.1;
 				}
 			}
 
-			double median = sum_t / (num_x * num_y);
+			double median = sum_t / (width_sample * height_sample);
 
-			Print_line("Min temp.: " + std::to_string(min_t) + " Max temp.: " + std::to_string(max_t) + " Median temp.: " + std::to_string(median), 2);
+			Print_line("Min temp.: " + std::to_string(min_t - 273) + " Max temp.: " + std::to_string(max_t - 273) + " Median temp.: " + std::to_string(median - 273), 2);
 
-			Print_line("Time step: " + std::to_string(time_step) + ";/t/tMax teprture oer step: " + std::to_string(max_del_t), 5);
+			Print_line("Time step: " + std::to_string(time_step) + ";\t\tMax temperature per step: " + std::to_string(max_del_t), 5);
 
-			time_step = 0.01 / max_del_t;
+			time_step = 0.0001 / max_del_t;
 
 		}
 
-		for (int i = 0; i < num_y; i++)
+		for (int i = 0; i < height_sample; i++)
 		{
-			for (int j = 0; j < num_x; j++)
+			for (int j = 0; j < width_sample; j++)
 			{
 				all_cell[i][j].swap();
 			}
 		}
 
-		//if (time > 60. * 4)
-		//{
-		//	std::cin.get();
-		//}
 
+
+		if (time > 60. * 2.5 && t5)
+		{
+			std::cin.get();
+			t5 = false;
+		}
 
 		//Sleep(1000);
 		//std::cin.get();
@@ -146,7 +154,7 @@ int main()
 	std::cout << "end";
 	std::cin.get();
 	
-	for (int i = 0; i < num_y; i++)
+	for (int i = 0; i < height_sample; i++)
 	{
 		delete[] all_cell[i];
 	}

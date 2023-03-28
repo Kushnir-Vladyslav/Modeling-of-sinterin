@@ -13,7 +13,11 @@ class Material
 {
 public:
 	Material(function resistances, function density, function heat_capacity, function thermal_conductivity, State state) :
-		resistances(resistances), density(density), heat_capacity(heat_capacity), thermal_conductivity(thermal_conductivity), state(state) {}
+		resistances(resistances),
+		density(density),
+		heat_capacity(heat_capacity),
+		thermal_conductivity(thermal_conductivity),
+		state(state) {}
 
 	function resistances; // electrical resistivity of the material, ohm / m (ohm * m^2 / m) (R*S/l)
 

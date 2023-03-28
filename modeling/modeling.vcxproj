@@ -171,6 +171,7 @@
     <ClInclude Include="Calculation_of_heat_distribution.h" />
     <ClInclude Include="Calculation_of_currents_Gauss.h" />
     <ClInclude Include="Calculation_of_currents_SOR.h" />
+    <ClInclude Include="data.h" />
     <ClInclude Include="Materials.h" />
     <ClInclude Include="Print_line.h" />
     <ClInclude Include="Wind_wrap.h" />
