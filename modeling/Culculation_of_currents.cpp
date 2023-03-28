@@ -9,12 +9,110 @@ Culculation_of_currents::Culculation_of_currents(int width, int height) : Wind(L
 	for (int i = 0; i < num_equations; i++)
 		equations[i] = new double[width * 2 + 1]{ 0 };
 
-	currents = new double[num_equations] {0};
+	voltage = new double[num_equations] {0};
 
 	BitmapMemory = (void*) new UINT32[width * height];
 }
 
-void Culculation_of_currents::Culculation(Cell** arr_of_cells, double voltage, bool is_draw_wind)
+//void Culculation_of_currents::Culculation(Cell** arr_of_cells, double potential_difference, bool is_draw_wind)
+//{
+//	double **equations  = new double* [num_equations]; // create arr for matrix
+//	for (int i = 0; i < num_equations; i++)
+//		equations[i] = new double[width * 2 + 1]{ 0 };
+//
+//	for (int i = 0; i < num_equations; i++) // filling the matrix with coefficients
+//	{
+//		int i_y = i / (width);  // definition of the x-y coordinates of the contour, not the cell
+//		int i_x = i - (width)*i_y;
+//
+//		if (i_x > 0) // left
+//		{
+//			if (i_y < height) equations[i][width - 1] -= arr_of_cells[i_y][i_x].resistances / 2;
+//			if (i_y > 0) equations[i][width - 1] -= arr_of_cells[i_y - 1][i_x].resistances / 2;
+//		}
+//		else
+//		{
+//			if (i_y < height) equations[i][width] += arr_of_cells[i_y][i_x].resistances / 2;
+//			if (i_y > 0) equations[i][width] += arr_of_cells[i_y - 1][i_x].resistances / 2;
+//		}
+//		if (i_y > 0) //upper
+//		{
+//			if (i_x != width - 1) equations[i][0] = -(arr_of_cells[i_y - 1][i_x].resistances + arr_of_cells[i_y - 1][i_x + 1].resistances) / 2;
+//			else equations[i][0] = -dielectric;
+//		}
+//		if (i_x < width - 1) // right
+//		{
+//			if (i_y < height) equations[i][width + 1] -= arr_of_cells[i_y][i_x + 1].resistances / 2;
+//			if (i_y > 0) equations[i][width + 1] -= arr_of_cells[i_y - 1][i_x + 1].resistances / 2;
+//		}
+//		if (i_y < height) // bottom
+//		{
+//			if (i_x != width - 1) equations[i][width * 2] = -(arr_of_cells[i_y][i_x].resistances + arr_of_cells[i_y][i_x + 1].resistances) / 2;
+//			else equations[i][width * 2] = -dielectric;
+//		}
+//		// self
+//		{
+//			equations[i][width] += -equations[i][width - 1] - equations[i][0] - equations[i][width + 1] - equations[i][width * 2];
+//		}
+//		// free members
+//		{
+//			if (i_x == width - 1) currents[i] = potential_difference / (height + 1.);
+//		}
+//	}
+//
+//	for (int i = 0; i < num_equations; i++) // direct passage of the solution of the matrix
+//	{
+//		currents[i] /= equations[i][width];					// make 1 in diagonl
+//		for (int j = width * 2; j > width; j--)									 // sing > not a >= because we never more use this num 
+//		{
+//			equations[i][j] /= equations[i][width];
+//		}
+//
+//		for (int j = 1; j <= width && i + j < num_equations; j++) // sub line to bottom
+//		{
+//			currents[i + j] -= equations[i + j][width - j] * currents[i]; // sub of cur
+//			for (int k = width * 2; k > width; k--)									// sing > not a >= because we never more use this num 
+//			{
+//				equations[i + j][k - j] -= equations[i + j][width - j] * equations[i][k];
+//			}
+//		}
+//
+//	}
+//
+//	for (int i = num_equations - 1; i > 0; i--) // inverse passage of the matrix solution
+//	{
+//
+//		for (int j = 1; j <= width && i - j >= 0; j++) // sub line to top
+//		{
+//			currents[i - j] -= currents[i] * equations[i - j][width + j];
+//			//equations[i - j][width + j] = 0;											//this is commented because we never use this num
+//		}
+//	}
+//
+//	for (int i = 0; i < height; i++) // calculation of currents flowing in nodes
+//	{
+//		for (int j = 0; j < width; j++)
+//		{
+//			if (j == 0)
+//			{
+//				arr_of_cells[i][j].currents = (abs(currents[i * width]) +
+//					abs(currents[(i + 1) * width]) +
+//					abs(currents[i * width] - currents[(i + 1) * width])) / 2;
+//			}
+//			else
+//			{
+//				arr_of_cells[i][j].currents = (abs(currents[i * width + j - 1] - currents[i * width + j]) +
+//					abs(currents[(i + 1) * width + j - 1] - currents[(i + 1) * width + j]) +
+//					abs(currents[i * width + j - 1] - currents[(i + 1) * width + j - 1]) +
+//					abs(currents[i * width + j] - currents[(i + 1) * width + j])) / 2;
+//			}
+//		}
+//	}
+//
+//	if (is_draw_wind) Draw_wind(arr_of_cells);
+//}
+
+void Culculation_of_currents::Culculation(Cell** arr_of_cells, double potential_difference, bool is_draw_wind)
 {
 	for (int i = 0; i < num_equations; i++) // filling the matrix with coefficients
 	{
@@ -52,13 +150,13 @@ void Culculation_of_currents::Culculation(Cell** arr_of_cells, double voltage, b
 		}
 		// free members
 		{
-			if (i_x == width - 1) currents[i] = voltage / (height + 1.);
+			if (i_x == width - 1) voltage[i] = potential_difference / (height + 1.);
 		}
 	}
 
 	for (int i = 0; i < num_equations; i++) // direct passage of the solution of the matrix
 	{
-		currents[i] /= equations[i][width];					// make 1 in diagonl
+		voltage[i] /= equations[i][width];					// make 1 in diagonl
 		for (int j = width * 2; j > width; j--)									 // sing > not a >= because we never more use this num 
 		{
 			equations[i][j] /= equations[i][width];
@@ -66,7 +164,7 @@ void Culculation_of_currents::Culculation(Cell** arr_of_cells, double voltage, b
 
 		for (int j = 1; j <= width && i + j < num_equations; j++) // sub line to bottom
 		{
-			currents[i + j] -= equations[i + j][width - j] * currents[i]; // sub of cur
+			voltage[i + j] -= equations[i + j][width - j] * voltage[i]; // sub of cur
 			for (int k = width * 2; k > width; k--)									// sing > not a >= because we never more use this num 
 			{
 				equations[i + j][k - j] -= equations[i + j][width - j] * equations[i][k];
@@ -75,15 +173,19 @@ void Culculation_of_currents::Culculation(Cell** arr_of_cells, double voltage, b
 
 	}
 
+	double *currents = new double[num_equations] {0};
+
 	for (int i = num_equations - 1; i > 0; i--) // inverse passage of the matrix solution
 	{
-
 		for (int j = 1; j <= width && i - j >= 0; j++) // sub line to top
 		{
-			currents[i - j] -= currents[i] * equations[i - j][width + j];
+			voltage[i - j] -= voltage[i] * equations[i - j][width + j];
 			//equations[i - j][width + j] = 0;											//this is commented because we never use this num
 		}
 	}
+
+	for (int i = 0; i < num_equations; i++)
+		currents[i] = voltage[i];
 
 	for (int i = 0; i < height; i++) // calculation of currents flowing in nodes
 	{
@@ -104,6 +206,8 @@ void Culculation_of_currents::Culculation(Cell** arr_of_cells, double voltage, b
 			}
 		}
 	}
+
+	delete[] currents;
 
 	if (is_draw_wind) Draw_wind(arr_of_cells);
 }
@@ -145,5 +249,5 @@ Culculation_of_currents::~Culculation_of_currents() // memory release
 
 	delete[] equations;
 
-	delete[] currents;
+	delete[] voltage;
 }

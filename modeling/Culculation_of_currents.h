@@ -21,7 +21,7 @@ private:
 	int num_equations;
 	double** equations;
 
-	double* currents;
+	double* voltage;
 
 	int width;
 	int height;
