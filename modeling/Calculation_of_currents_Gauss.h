@@ -3,15 +3,15 @@
 #include "Wind_wrap.h"
 #include "Cell.h"
 
-class Culculation_of_currents
+class Calculation_of_currents_Gauss
 {
 public:
-	Culculation_of_currents(int width, int height);
+	Calculation_of_currents_Gauss(int width, int height);
 
 	void Culculation(Cell** arr_of_cells, double voltage, bool is_draw_wind = true);
 	void Draw_wind(Cell** arr_of_cells);
 
-	~Culculation_of_currents();
+	~Calculation_of_currents_Gauss();
 private:
 	Wind_wrap Wind;
 	void* BitmapMemory;

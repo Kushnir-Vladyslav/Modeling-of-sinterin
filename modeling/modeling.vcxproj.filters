@@ -24,16 +24,16 @@
     <ClCompile Include="Wind_wrap.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="Fast_culculation_of_currents.cpp">
+    <ClCompile Include="Calculation_of_currents_Gauss.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="Culculation_of_currents.cpp">
+    <ClCompile Include="Calculation_of_effective_properties.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="Calculation_of_heat_distribution.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="Calculation_of_effective_properties.cpp">
+    <ClCompile Include="Calculation_of_currents_SOR.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,13 +41,10 @@
     <ClInclude Include="Wind_wrap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Culculation_of_currents.h">
+    <ClInclude Include="Calculation_of_currents_Gauss.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Calculation_of_effective_properties.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Fast_culculation_of_currents.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Calculation_of_heat_distribution.h">
@@ -57,6 +54,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Print_line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Calculation_of_currents_SOR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

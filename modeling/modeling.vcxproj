@@ -161,16 +161,16 @@
   <ItemGroup>
     <ClCompile Include="Calculation_of_heat_distribution.cpp" />
     <ClCompile Include="Cell.h" />
-    <ClCompile Include="Culculation_of_currents.cpp" />
-    <ClCompile Include="Fast_culculation_of_currents.cpp" />
+    <ClCompile Include="Calculation_of_currents_Gauss.cpp" />
+    <ClCompile Include="Calculation_of_currents_SOR.cpp" />
     <ClCompile Include="modeling.cpp" />
     <ClCompile Include="Wind_wrap.cpp" />
     <ClCompile Include="Calculation_of_effective_properties.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculation_of_heat_distribution.h" />
-    <ClInclude Include="Culculation_of_currents.h" />
-    <ClInclude Include="Fast_culculation_of_currents.h" />
+    <ClInclude Include="Calculation_of_currents_Gauss.h" />
+    <ClInclude Include="Calculation_of_currents_SOR.h" />
     <ClInclude Include="Materials.h" />
     <ClInclude Include="Print_line.h" />
     <ClInclude Include="Wind_wrap.h" />
