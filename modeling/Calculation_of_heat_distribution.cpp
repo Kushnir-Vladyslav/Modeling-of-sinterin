@@ -1,5 +1,7 @@
 #include "Calculation_of_heat_distribution.h"
 #include <iostream>
+#include <vector>
+#include <thread>
 
 Calculation_of_heat_distribution::Calculation_of_heat_distribution(int width, int height) : Wind(L"Heat distribution", 500, 500), width(width), height(height)
 {
@@ -103,7 +105,7 @@ void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double d
 					cheng_temprture_per_second += Temprture_flow_from(arr_of_cells, i, j, DHF_UP);
 					break;
 				case THE_STATIC:
-					cheng_temprture_per_second += Static_temprture_wall(arr_of_cells, i, j, 1000);
+					cheng_temprture_per_second += Static_temprture_wall(arr_of_cells, i, j, 1273);
 					break;
 				}
 			}
@@ -126,7 +128,7 @@ void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double d
 					cheng_temprture_per_second += Temprture_flow_from(arr_of_cells, i, j, DHF_DOWN);
 					break;
 				case THE_STATIC:
-					cheng_temprture_per_second += Static_temprture_wall(arr_of_cells, i, j, 0);
+					cheng_temprture_per_second += Static_temprture_wall(arr_of_cells, i, j, 273);
 					break;
 				}
 			}
@@ -183,73 +185,6 @@ void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double d
 
 	if (is_draw_wind) Draw_wind(arr_of_cells);
 }
-
-//void Calculation_of_heat_distribution::Culculation(Cell** arr_of_cells, double delta_time, bool is_draw_wind) //differential variant of heat distribution
-//{
-//	for (int i = 0; i < height; i++) // minmax search
-//	{
-//		for (int j = 0; j < width; j++)
-//		{	
-//			double thermal_condactivity_x = 0;
-//
-//			if (j == 0)
-//			{
-//				thermal_condactivity_x = 3 / (1 / arr_of_cells[i][j].thermal_conductivity + 2 / arr_of_cells[i][j + 1].thermal_conductivity);
-//			}
-//			else if (j == width - 1)
-//			{
-//				thermal_condactivity_x = 3 / (1 / arr_of_cells[i][j - 1].thermal_conductivity + 2 / arr_of_cells[i][j].thermal_conductivity);
-//			}
-//			else
-//			{
-//				thermal_condactivity_x = 4 / (1 / arr_of_cells[i][j - 1].thermal_conductivity + 2 / arr_of_cells[i][j].thermal_conductivity + 1 / arr_of_cells[i][j + 1].thermal_conductivity);
-//			}
-//
-//			double temprture_conductivity_x = thermal_condactivity_x / (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density);
-//
-//			double grad_x = (((j > 0) ? arr_of_cells[i][j - 1].old_temperature : arr_of_cells[i][j].old_temperature)  // left
-//				- 2 * arr_of_cells[i][j].old_temperature
-//				+ ((j < width - 1) ? arr_of_cells[i][j + 1].old_temperature : arr_of_cells[i][j].old_temperature)) // right
-//				/ pow(arr_of_cells[i][j].linear_size, 2);
-//
-//			double thermal_condactivity_y = 0;
-//
-//			if (i == 0)
-//			{
-//				thermal_condactivity_y = 3 / (1 / arr_of_cells[i][j].thermal_conductivity + 2 / arr_of_cells[i + 1][j].thermal_conductivity);
-//			}
-//			else if (i == height - 1)
-//			{
-//				thermal_condactivity_y = 3 / (1 / arr_of_cells[i - 1][j].thermal_conductivity + 2 / arr_of_cells[i][j].thermal_conductivity);
-//			}
-//			else
-//			{
-//				thermal_condactivity_y = 4 / (1 / arr_of_cells[i - 1][j].thermal_conductivity + 2 / arr_of_cells[i][j].thermal_conductivity + 1 / arr_of_cells[i + 1][j].thermal_conductivity);
-//			}
-//
-//			double temprture_conductivity_y = thermal_condactivity_y / (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density);
-//
-//			double grad_y = (((i > 0) ? arr_of_cells[i - 1][j].old_temperature : 1000) //top
-//				- 2 * arr_of_cells[i][j].old_temperature
-//				+ ((i < height - 1) ? arr_of_cells[i + 1][j].old_temperature : 0)) // botom
-//				/ pow(arr_of_cells[i][j].linear_size, 2);
-//
-//			double internal_heat_release = pow(arr_of_cells[i][j].currents, 2) * arr_of_cells[i][j].resistances / arr_of_cells[i][j].linear_size;
-//
-//			//if (i == height / 2 && j == width / 2) internal_heat_release = 1000;
-//
-//			internal_heat_release /= (arr_of_cells[i][j].heat_capacity * arr_of_cells[i][j].density * arr_of_cells[i][j].volume);
-//
-//			//arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature  + (trmprture_conductivity * (grad_x + grad_y) + internal_heat_release)* delta_time;
-//			arr_of_cells[i][j].new_temperature = arr_of_cells[i][j].old_temperature + (temprture_conductivity_x * grad_x + temprture_conductivity_y * grad_y) * delta_time;
-//
-//
-//		}
-//	}
-//
-//	if (is_draw_wind) Draw_wind(arr_of_cells);
-//}
-
 
 void Calculation_of_heat_distribution::Draw_wind(Cell** arr_of_cells)
 {
