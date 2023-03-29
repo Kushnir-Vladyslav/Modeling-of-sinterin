@@ -21,15 +21,6 @@ enum Direction_heat_flow
 	DHF_RIGHT
 };
 
-enum Type_heat_exchange
-{
-	THE_NON,
-	THE_FLOW,
-	THE_STATIC,
-	THE_RADIATION,
-	THE_CONVECTION
-};
-
 double Temprture_flow_from (Cell** sample, int i, int j, Direction_heat_flow DHF) // K/c, degrees per second, T_f = Q/(cqv) -> Q = dT/sum(Ri) -> Ri = lin_size / (term_conduct * area)
 {
 	double sum_revers_termal_condactiviti = 1 / sample[i][j].thermal_conductivity;

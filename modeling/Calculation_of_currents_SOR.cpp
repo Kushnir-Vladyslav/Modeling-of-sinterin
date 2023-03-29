@@ -79,7 +79,6 @@ void Calculation_of_currents_SOR::Culculation(Cell** sample, bool is_draw_wind)
 		First_time = false;
 	}
 
-	
 	bool solved = false;
 
 	double error = 0.;
@@ -106,14 +105,14 @@ void Calculation_of_currents_SOR::Culculation(Cell** sample, bool is_draw_wind)
 		{
 			double S = 0.;
 
-			if (i - width_sample >= 0) S -= equations[i][0] * currents[i - width_sample];
-			if (i - 1 >= 0)S -= equations[i][1] * currents[i - 1];
-			S -= equations[i][2] * currents[i];
-			if (i + 1 < num_equations) S -= equations[i][3] * currents[i + 1];
-			if (i + width_sample < num_equations) S -= equations[i][4] * currents[i + width_sample];
+			if (i - width_sample >= 0) S += equations[i][0] * currents[i - width_sample];
+			if (i - 1 >= 0) S += equations[i][1] * currents[i - 1];
+			S += equations[i][2] * currents[i];
+			if (i + 1 < num_equations) S += equations[i][3] * currents[i + 1];
+			if (i + width_sample < num_equations) S += equations[i][4] * currents[i + width_sample];
 
 
-			if (error < abs(S + voltage[i])) error = abs(S + voltage[i]);
+			if (error < abs(voltage[i] - S)) error = abs(voltage[i] - S);
 		}
 		if (abs(error) <= tolerance || abs(error - last_error) <= break_difference)
 		{

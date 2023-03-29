@@ -18,9 +18,34 @@
 
 //material
 #define dielectric				(INT32_MAX / 3.)
+#define infinity_heat_resistor	(INT32_MAX / 3.)
 
-#define initial_temperature		273.
 
+// termal
+#define Zero_Celsius			273.15
+#define initial_temperature		(Zero_Celsius + 0.)
+
+enum Type_heat_exchange
+{
+	THE_NON,
+	THE_FLOW,
+	THE_STATIC,
+	THE_RADIATION,
+	THE_CONVECTION
+};
+
+// up
+#define UP_Type_heat_exchange	THE_STATIC
+#define UP_Static_temperature	(Zero_Celsius + 1000)
+// down
+#define DOWN_Type_heat_exchange	THE_STATIC
+#define DOWN_Static_temperature	initial_temperature
+// left
+#define LEFT_Type_heat_exchange	THE_NON
+#define LEFT_Static_temperature	(Zero_Celsius + 1000)
+// right
+#define RIGHT_Type_heat_exchange THE_NON
+#define RIGHT_Static_temperature initial_temperature
 
 
 

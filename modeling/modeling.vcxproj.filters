@@ -36,6 +36,9 @@
     <ClCompile Include="Calculation_of_currents_SOR.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="Calculation_of_heat_distribution_SOR.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Wind_wrap.h">
@@ -61,6 +64,9 @@
     </ClInclude>
     <ClInclude Include="data.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Calculation_of_heat_distribution_SOR.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

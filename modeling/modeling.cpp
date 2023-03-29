@@ -8,6 +8,7 @@
 #include "Calculation_of_currents_SOR.h"
 #include "Calculation_of_effective_properties.h"
 #include "Calculation_of_heat_distribution.h"
+#include "Calculation_of_heat_distribution_SOR.h"
 
 #include "data.h"
 
@@ -32,31 +33,31 @@ int main()
 		all_cell[i] = new Cell[width_sample];
 	}
 
-	Calculation_of_effective_properties Resistances (false);
+	Calculation_of_effective_properties Resistances (true);
 	
 	Resistances.Array_initialization(all_cell);
 
-	Resistances.Calculation_all_of_effective_properties(all_cell);
+	Resistances.Calculation_all_of_effective_properties(all_cell, DR_THERMAL_CONDUCTIVITY);
 
-	Resistances.Test_filling_resistances(all_cell, true);
+	/*Resistances.Test_filling_resistances(all_cell, false);*/
 
-	Calculation_of_currents_SOR Current (true);
-	Timer tt;
-	while (true)
-	{
-		Current.Culculation(all_cell, true);
-		std::cout << "time:\t" << tt.Dt() << std::endl;
+	//Calculation_of_currents_SOR Current (true);
+	//Timer tt;
+	//while (true)
+	//{
+	//	Current.Culculation(all_cell, true);
+	//	std::cout << "time:\t" << tt.Dt() << std::endl;
 
-		for (int i = 0; i < height_sample; i++) // generation of cell resistances (with neck)
-		{
-			for (int j = 0; j < width_sample; j++)
-			{
-				all_cell[i][j].resistances += all_cell[i][j].resistances * (rand() % 10 / 1000.) * ((rand() % 2 == 0) ? -1 : 1);
-			}
-		}
-	}
+	//	for (int i = 0; i < height_sample; i++) // generation of cell resistances (with neck)
+	//	{
+	//		for (int j = 0; j < width_sample; j++)
+	//		{
+	//			all_cell[i][j].resistances += all_cell[i][j].resistances * (rand() % 10 / 1000.) * ((rand() % 2 == 0) ? -1 : 1);
+	//		}
+	//	}
+	//}
 
-	std::cin.get();
+	//std::cin.get();
 	//for (int i = 0; i < height_sample; i++) // generation of cell resistances (with neck)
 	//{
 	//	for (int j = 0; j < width_sample; j++)
@@ -90,7 +91,7 @@ int main()
 	//--------------------------------------------------------
 	bool t5 = true;
 	
-	Calculation_of_heat_distribution heat_distribution (true);
+	Calculation_of_heat_distribution_SOR heat_distribution (true);
 	double max_del_t = 0;
 	double time_step = 0.0001;
 	double time = 0;
