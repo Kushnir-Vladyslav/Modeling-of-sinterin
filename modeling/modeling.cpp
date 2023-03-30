@@ -40,23 +40,23 @@ int main()
 
 	Resistances.Test_filling_resistances(all_cell, true);
 
-	Calculation_of_currents_SOR Current (true);
-	Timer tt;
-	while (true)
-	{
-		Current.Culculation(all_cell, true);
-		std::cout << "time:\t" << tt.Dt() << std::endl;
+	//Calculation_of_currents_SOR Current (true);
+	//Timer tt;
+	//while (true)
+	//{
+	//	Current.Culculation(all_cell, true);
+	//	std::cout << "time:\t" << tt.Dt() << std::endl;
 
-		for (int i = 0; i < height_sample; i++) // generation of cell resistances (with neck)
-		{
-			for (int j = 0; j < width_sample; j++)
-			{
-				all_cell[i][j].resistances += all_cell[i][j].resistances * (rand() % 10 / 1000.) * ((rand() % 2 == 0) ? -1 : 1);
-			}
-		}
-	}
+	//	for (int i = 0; i < height_sample; i++) // generation of cell resistances (with neck)
+	//	{
+	//		for (int j = 0; j < width_sample; j++)
+	//		{
+	//			all_cell[i][j].resistances += all_cell[i][j].resistances * (rand() % 10 / 1000.) * ((rand() % 2 == 0) ? -1 : 1);
+	//		}
+	//	}
+	//}
 
-	std::cin.get();
+	//std::cin.get();
 	//for (int i = 0; i < height_sample; i++) // generation of cell resistances (with neck)
 	//{
 	//	for (int j = 0; j < width_sample; j++)
@@ -89,7 +89,8 @@ int main()
 	}
 	//--------------------------------------------------------
 	bool t5 = true;
-	
+	Timer time_of;
+	int iter = 0;
 	Calculation_of_heat_distribution heat_distribution (true);
 	double max_del_t = 0;
 	double time_step = 0.0001;
@@ -140,13 +141,19 @@ int main()
 			}
 		}
 
-
-
-		if (time > 60. * 2.5 && t5)
+		if (time_of.elapsed() > 1.)
 		{
-			std::cin.get();
-			t5 = false;
+			Print_line("Iter per second:\t\t" + std::to_string(iter / time_of.Dt()), 7);
+			iter = 0;
 		}
+		else
+			iter++;
+
+		//if (time > 60. * 2.5 && t5)
+		//{
+		//	std::cin.get();
+		//	t5 = false;
+		//}
 
 		//Sleep(1000);
 		//std::cin.get();
