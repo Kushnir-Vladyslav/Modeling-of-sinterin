@@ -21,15 +21,6 @@ enum Direction_heat_flow
 	DHF_RIGHT
 };
 
-enum Type_heat_exchange
-{
-	THE_NON,
-	THE_FLOW,
-	THE_STATIC,
-	THE_RADIATION,
-	THE_CONVECTION
-};
-
 double Temprture_flow_from (Cell** sample, int i, int j, Direction_heat_flow DHF) // K/c, degrees per second, T_f = Q/(cqv) -> Q = dT/sum(Ri) -> Ri = lin_size / (term_conduct * area)
 {
 	double sum_revers_termal_condactiviti = 1 / sample[i][j].thermal_conductivity;
@@ -93,94 +84,66 @@ void Calculation_of_heat_distribution::Culculation(Cell** sample, double delta_t
 			double cheng_temprture_per_second = 0.;
 
 			{ // up
-				Type_heat_exchange THE = THE_NON;
-
 				if (i > 0)
 				{
-					THE = THE_FLOW;
+					cheng_temprture_per_second += Temprture_flow_from(sample, i, j, DHF_UP);
 				}
 				else
 				{
-					THE = THE_STATIC;
-				}
-
-				switch (THE)
-				{
-				case THE_FLOW:
-					cheng_temprture_per_second += Temprture_flow_from(sample, i, j, DHF_UP);
-					break;
-				case THE_STATIC:
-					cheng_temprture_per_second += Static_temprture_wall(sample, i, j, 1273);
-					break;
+					switch (UP_Type_heat_exchange)
+					{
+					case THE_STATIC:
+						cheng_temprture_per_second += Static_temprture_wall(sample, i, j, UP_Static_temperature);
+						break;
+					}
 				}
 			}
 
 			{ // down
-				Type_heat_exchange THE = THE_NON;
-
 				if (i < height_sample - 1)
 				{
-					THE = THE_FLOW;
+					cheng_temprture_per_second += Temprture_flow_from(sample, i, j, DHF_DOWN);
 				}
 				else
 				{
-					THE = THE_STATIC;
-				}
-
-				switch (THE)
-				{
-				case THE_FLOW:
-					cheng_temprture_per_second += Temprture_flow_from(sample, i, j, DHF_DOWN);
-					break;
-				case THE_STATIC:
-					cheng_temprture_per_second += Static_temprture_wall(sample, i, j, 273);
-					break;
+					switch (DOWN_Type_heat_exchange)
+					{
+					case THE_STATIC:
+						cheng_temprture_per_second += Static_temprture_wall(sample, i, j, DOWN_Static_temperature);
+						break;
+					}
 				}
 			}
 
 			{ // left
-				Type_heat_exchange THE = THE_NON;
-
 				if (j > 0)
 				{
-					THE = THE_FLOW;
+					cheng_temprture_per_second += Temprture_flow_from(sample, i, j, DHF_LEFT);
 				}
 				else
 				{
-					THE = THE_NON;
-				}
-
-				switch (THE)
-				{
-				case THE_FLOW:
-					cheng_temprture_per_second += Temprture_flow_from(sample, i, j, DHF_LEFT);
-					break;
-				case THE_STATIC:
-					cheng_temprture_per_second += Static_temprture_wall(sample, i, j, 1000);
-					break;
+					switch (LEFT_Type_heat_exchange)
+					{
+					case THE_STATIC:
+						cheng_temprture_per_second += Static_temprture_wall(sample, i, j, LEFT_Static_temperature);
+						break;
+					}
 				}
 			}
 
 			{ // right
-				Type_heat_exchange THE = THE_NON;
-
 				if (j < width_sample - 1)
 				{
-					THE = THE_FLOW;
+					cheng_temprture_per_second += Temprture_flow_from(sample, i, j, DHF_RIGHT);
 				}
 				else
 				{
-					THE = THE_NON;
-				}
-
-				switch (THE)
-				{
-				case THE_FLOW:
-					cheng_temprture_per_second += Temprture_flow_from(sample, i, j, DHF_RIGHT);
-					break;
-				case THE_STATIC:
-					cheng_temprture_per_second += Static_temprture_wall(sample, i, j, 0);
-					break;
+					switch (RIGHT_Type_heat_exchange)
+					{
+					case THE_STATIC:
+						cheng_temprture_per_second += Static_temprture_wall(sample, i, j, RIGHT_Static_temperature);
+						break;
+					}
 				}
 			}
 
