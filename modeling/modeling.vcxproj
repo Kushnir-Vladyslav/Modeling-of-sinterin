@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Calculation_of_heat_distribution.cpp" />
+    <ClCompile Include="Calculation_of_heat_distribution_def.cpp" />
     <ClCompile Include="Cell.h" />
     <ClCompile Include="Calculation_of_currents_Gauss.cpp" />
     <ClCompile Include="Calculation_of_currents_SOR.cpp" />
@@ -169,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculation_of_heat_distribution.h" />
+    <ClInclude Include="Calculation_of_heat_distribution_def.h" />
     <ClInclude Include="Calculation_of_currents_Gauss.h" />
     <ClInclude Include="Calculation_of_currents_SOR.h" />
     <ClInclude Include="data.h" />
