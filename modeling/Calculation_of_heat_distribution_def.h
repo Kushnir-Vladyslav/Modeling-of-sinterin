@@ -15,6 +15,9 @@ public:
 private:
 	double MNK_MATRIX[15][15];
 
+	double matrix_body[15][15];
+	double free_members[15];
+
 	Wind_wrap* Wind;
 	void* BitmapMemory;
 };

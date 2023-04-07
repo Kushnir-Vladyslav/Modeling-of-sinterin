@@ -8,6 +8,7 @@
 #include "Calculation_of_currents_SOR.h"
 #include "Calculation_of_effective_properties.h"
 #include "Calculation_of_heat_distribution.h"
+#include "Calculation_of_heat_distribution_def.h"
 
 #include "data.h"
 
@@ -91,7 +92,7 @@ int main()
 	bool t5 = true;
 	Timer time_of;
 	int iter = 0;
-	Calculation_of_heat_distribution heat_distribution (true);
+	Calculation_of_heat_distribution_def heat_distribution (true);
 	double max_del_t = 0;
 	double time_step = 0.0001;
 	double time = 0;
@@ -125,11 +126,11 @@ int main()
 
 			double median = sum_t / (width_sample * height_sample);
 
-			Print_line("Min temp.: " + std::to_string(min_t - 273) + " Max temp.: " + std::to_string(max_t - 273) + " Median temp.: " + std::to_string(median - 273), 2);
+			Print_line("Min temp.: " + std::to_string(min_t - Zero_Celsius) + " Max temp.: " + std::to_string(max_t - Zero_Celsius) + " Median temp.: " + std::to_string(median - Zero_Celsius), 2);
 
 			Print_line("Time step: " + std::to_string(time_step) + ";\t\tMax temperature per step: " + std::to_string(max_del_t), 5);
 
-			time_step = 0.0001 / max_del_t;
+			//time_step = 0.0001 / max_del_t;
 
 		}
 
